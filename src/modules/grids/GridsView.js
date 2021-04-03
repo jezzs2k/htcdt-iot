@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { colors, fonts } from '../../styles';
+import ListIot from '../ListDeviceIot';
 
 export default class GridsScreen extends React.Component {
   _getRenderItemFunction = () => this.renderRow;
@@ -40,6 +41,7 @@ export default class GridsScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <ListIot />
         <FlatList
           keyExtractor={item =>
             item.id
