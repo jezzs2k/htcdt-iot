@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -7,9 +7,9 @@ import { Text } from '../../components/StyledText';
 import { Button } from '../../components';
 
 const items = [
-  { color: 'red', total: 10 },
-  { color: 'green', total: 14 },
-  { color: 'blue', total: 17 },
+  { color: 'red', total: 0 },
+  { color: 'green', total: 0 },
+  { color: 'blue', total: 0 },
 ];
 
 const RenderItem = ({ color, total }) => (
@@ -17,8 +17,8 @@ const RenderItem = ({ color, total }) => (
     <View style={[styles.designItem, { backgroundColor: color }]} />
     <View>
       <Text size={20} white>
-        So luong san pham:{' '}
-        <Text size={24} white>
+        Số lượng sản phẩm:{' '}
+        <Text size={24} style={styles.totalNumStyle} white>
           {total}
         </Text>
       </Text>
@@ -27,6 +27,23 @@ const RenderItem = ({ color, total }) => (
 );
 
 export default function DetailItem() {
+  const [newColor, setNewColor] = useState({});
+  const [listItem, setListItem] = useState([]);
+
+  setTimeout(() => {
+    if (Math.random() > 0.8) {
+      // setNewColor({color: 'red', total: 1});
+      setListItem((data) => ([...data, {color: 'red', total: 1}]))
+    }else if (Math.random() <= 0.8 && Math.random() > 0.4) {
+      // setNewColor({color: 'green', total: 1});
+      setListItem((data) => ([...data, {color: 'green', total: 1}]))
+    }else{
+      // setNewColor({color: 'blue', total: 1});
+      setListItem((data) => ([...data, {color: 'blue', total: 1}]))
+    }
+  } , 2000);
+  
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -52,13 +69,13 @@ export default function DetailItem() {
           }}
         >
           <Text size={18} white style={{ marginVertical: 8 }}>
-            Hien thi thong bao
+            Theo dõi chi tiết
           </Text>
           <View
             style={{
               minHeight: 100,
               maxHeight: 200,
-              borderColor: 'red',
+              borderColor: '#b2bec3',
               borderWidth: 4,
               paddingHorizontal: 8,
               maxWidth: '90%',
@@ -71,48 +88,23 @@ export default function DetailItem() {
               scrollsToTop
               scrollEnabled
             >
-              <Text size={18} white>
-                Ten sdsd: Update thong tin
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: Update thong tin
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: Update thong tin
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: Update thong tin
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: Update thong tin
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: Update thong tin mau do
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: Update thong tin mau do
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: Update thong tin mau do
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: Update thong tin mau do
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: Update thong tin mau do
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: upda tedadas,d update cai quan que j
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: upda tedadas,d update cai quan que j
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: upda tedadas,d update cai quan que j
-              </Text>
-              <Text size={18} white>
-                Ten sdsd: upda tedadas,d update cai quan que j
-              </Text>
+              {listItem.map(item => {
+                switch (item.color) {
+                  case 'red':
+                    return  <Text size={18} white>
+                    - Thêm 1 sản phẩm vào phía bắc
+                  </Text>
+                   case 'green':
+                    return  <Text size={18} white>
+                    - Thêm 1 sản phẩm vào phía trung
+                  </Text>
+                
+                  default:
+                    return  <Text size={18} white>
+                    - Thêm 1 sản phẩm vào phía nam
+                  </Text>
+                }
+              })}
             </ScrollView>
           </View>
           <View style={{flexDirection: 'row', marginVertical: 16, justifyContent: 'space-between'}}>
@@ -190,5 +182,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     marginVertical: 8,
+  },
+  totalNumStyle: {
+    fontWeight: '700'
   },
 });
