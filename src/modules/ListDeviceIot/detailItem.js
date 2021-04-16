@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
 import { fonts, colors } from '../../styles';
 import { Text } from '../../components/StyledText';
 import { Button } from '../../components';
 
-const items = [
-  { color: 'red', total: 0 },
-  { color: 'green', total: 0 },
-  { color: 'blue', total: 0 },
-];
+let scrollRef;
 
 const RenderItem = ({ color, total }) => (
   <View style={styles.containerItem}>
@@ -27,21 +23,51 @@ const RenderItem = ({ color, total }) => (
 );
 
 export default function DetailItem() {
-  const [newColor, setNewColor] = useState({});
   const [listItem, setListItem] = useState([]);
 
-  setTimeout(() => {
+  const updateItem = (_listItem) => {
+    const itemsDefault = [
+      { color: '#e74c3c', total: 0 , type: 'red'},
+      { color: '#2ed573', total: 0 , type: 'green'},
+      { color: '#1e90ff', total: 0 , type: 'blue'},
+    ];
+  
+    _listItem.forEach(item => {
+      if (item.type === 'red') {
+        itemsDefault[0].total += item.total;
+      }
+  
+      if (item.type === 'green') {
+        itemsDefault[1].total += item.total;
+      }
+  
+      if (item.type === 'blue') {
+        itemsDefault[2].total += item.total;
+      }
+    });
+  
+    return itemsDefault;
+  }
+
+  const timeOut = setTimeout(() => {
     if (Math.random() > 0.8) {
-      // setNewColor({color: 'red', total: 1});
-      setListItem((data) => ([...data, {color: 'red', total: 1}]))
+      setListItem((data) => ([...data, {color: '#e74c3c', total: 1, type: 'red'}]))
     }else if (Math.random() <= 0.8 && Math.random() > 0.4) {
-      // setNewColor({color: 'green', total: 1});
-      setListItem((data) => ([...data, {color: 'green', total: 1}]))
+      setListItem((data) => ([...data, {color: '#2ed573', total: 1, type: 'green'}]))
     }else{
-      // setNewColor({color: 'blue', total: 1});
-      setListItem((data) => ([...data, {color: 'blue', total: 1}]))
+      setListItem((data) => ([...data, {color: '#1e90ff', total: 1, type: 'blue'}]));
     }
-  } , 2000);
+  } , 1000);
+
+  useEffect(() => {
+    if(scrollRef){
+      scrollRef.scrollToEnd({animated: true})
+    };
+  }, [listItem]);
+
+  useEffect(() => () => () => {
+      clearTimeout(timeOut);
+    })
   
 
   return (
@@ -52,7 +78,7 @@ export default function DetailItem() {
         resizeMode="cover"
       >
         <View>
-          {items.map(item => (
+          {updateItem(listItem).map(item => (
             <RenderItem
               key={item.color}
               color={item.color}
@@ -73,43 +99,48 @@ export default function DetailItem() {
           </Text>
           <View
             style={{
-              minHeight: 100,
+              minHeight: 40,
               maxHeight: 200,
-              borderColor: '#b2bec3',
-              borderWidth: 4,
+              borderColor: '#ecf0f1',
+              borderWidth: 2,
               paddingHorizontal: 8,
               maxWidth: '90%',
               minWidth: '90%',
+              borderRadius: 10,
             }}
           >
-            <ScrollView
-              snapToEnd
-              invertStickyHeaders
-              scrollsToTop
-              scrollEnabled
+            <ScrollView ref={(ref) => {
+              scrollRef = ref
+            }}
             >
-              {listItem.map(item => {
-                switch (item.color) {
+              {listItem.map((item, i) => {
+                switch (item.type) {
                   case 'red':
-                    return  <Text size={18} white>
-                    - Thêm 1 sản phẩm vào phía bắc
-                  </Text>
+                    return  (
+                      <Text key={`${i}`} size={18} white>
+                        - Thêm 1 sản phẩm vào phía bắc
+                      </Text>
+)
                    case 'green':
-                    return  <Text size={18} white>
-                    - Thêm 1 sản phẩm vào phía trung
-                  </Text>
+                    return  (
+                      <Text key={`${i}`} size={18} white>
+                        - Thêm 1 sản phẩm vào phía trung
+                      </Text>
+)
                 
                   default:
-                    return  <Text size={18} white>
-                    - Thêm 1 sản phẩm vào phía nam
-                  </Text>
+                    return  (
+                      <Text key={`${i}`} size={18} white>
+                        - Thêm 1 sản phẩm vào phía nam
+                      </Text>
+)
                 }
               })}
             </ScrollView>
           </View>
           <View style={{flexDirection: 'row', marginVertical: 16, justifyContent: 'space-between'}}>
-            <Button style={{minWidth: 100, marginHorizontal: 8}} />
-            <Button style={{minWidth: 100, marginHorizontal: 8}}  />
+            <Button style={{minWidth: 100, marginHorizontal: 8}} caption="Start" />
+            <Button style={{minWidth: 100, marginHorizontal: 8}} caption="Stop" bgColor="#ff4757" />
           </View>
         </View>
       </ImageBackground>

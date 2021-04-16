@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 import {
   TouchableOpacity,
@@ -11,6 +12,9 @@ import { useNavigation } from '@react-navigation/native';
 
 import { colors, fonts } from '../../styles';
 import { Button } from '../../components';
+import socket from './socket';
+
+
 
 const ItemDevice = () => {
   const navigation = useNavigation();
@@ -33,9 +37,8 @@ const ItemDevice = () => {
         <View style={styles.containerBtn}>
           <Button
             style={[styles.btn]}
-            caption="Theo doi"
+            caption="Theo dõi"
             bgColor="green"
-            //   disabled
             onPress={() => navigation.navigate('DetailItem')}
           />
         </View>
