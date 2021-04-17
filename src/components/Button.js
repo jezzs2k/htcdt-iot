@@ -39,6 +39,7 @@ export default function RNSButton(props) {
         borderColor: props.bgColor,
       },
       props.rounded && styles.rounded,
+      props.styleContent || {}
     ];
     const textStyle = [
       styles.caption,
@@ -57,6 +58,7 @@ export default function RNSButton(props) {
       props.textColor && {
         color: props.textColor,
       },
+      props.styleText || {},
     ];
 
     content = (

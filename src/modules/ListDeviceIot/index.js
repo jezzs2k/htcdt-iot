@@ -1,10 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
 
 import ItemDevice from './itemDevice';
 
-const ListIot = () => {
-  return <ItemDevice />;
-};
+const ListIot = () => <ItemDevice />;
 
 export default ListIot;

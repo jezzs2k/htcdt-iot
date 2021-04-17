@@ -1,10 +1,13 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
+import { StyleSheet, View, ImageBackground, ScrollView, Dimensions } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { fonts, colors } from '../../styles';
 import { Text } from '../../components/StyledText';
 import { Button } from '../../components';
+import {socket} from './itemDevice';
+import {LoadingModal} from '../loadingModal';
 
 let scrollRef;
 
@@ -22,42 +25,43 @@ const RenderItem = ({ color, total }) => (
   </View>
 );
 
-export default function DetailItem() {
+function DetailItem({setStatusModal}) {
+  const navigation = useNavigation();
+
   const [listItem, setListItem] = useState([]);
+  const [items, setItems] = useState([
+    { color: '#e74c3c', total: 0 , type: 'red'},
+    { color: '#2ed573', total: 0 , type: 'green'},
+    { color: '#1e90ff', total: 0 , type: 'blue'},
+  ]);
 
-  const updateItem = (_listItem) => {
-    const itemsDefault = [
-      { color: '#e74c3c', total: 0 , type: 'red'},
-      { color: '#2ed573', total: 0 , type: 'green'},
-      { color: '#1e90ff', total: 0 , type: 'blue'},
-    ];
-  
-    _listItem.forEach(item => {
-      if (item.type === 'red') {
-        itemsDefault[0].total += item.total;
-      }
-  
-      if (item.type === 'green') {
-        itemsDefault[1].total += item.total;
-      }
-  
-      if (item.type === 'blue') {
-        itemsDefault[2].total += item.total;
-      }
+  const handleStop = () => {
+    setStatusModal(true);
+    socket.emit('stop-device', {
+      isStop: true,
     });
-  
-    return itemsDefault;
-  }
 
-  const timeOut = setTimeout(() => {
-    if (Math.random() > 0.8) {
-      setListItem((data) => ([...data, {color: '#e74c3c', total: 1, type: 'red'}]))
-    }else if (Math.random() <= 0.8 && Math.random() > 0.4) {
-      setListItem((data) => ([...data, {color: '#2ed573', total: 1, type: 'green'}]))
-    }else{
-      setListItem((data) => ([...data, {color: '#1e90ff', total: 1, type: 'blue'}]));
-    }
-  } , 1000);
+    setTimeout(() => {
+      navigation.goBack();
+      socket.disconnect();
+      setStatusModal(false);
+    }, 2000)
+  };
+
+  const updateItem = (_listItem, val) => _listItem.map((item) => {
+      if (item.type === val.type) {
+        return val;
+      };
+
+      return item;
+    })
+
+  useEffect(() => {
+    socket.on('colors-to-app', (val) => {
+      setListItem((data) => ([...data, val]));
+      setItems((data) => updateItem(data, val))
+    })
+  }, [])
 
   useEffect(() => {
     if(scrollRef){
@@ -65,9 +69,17 @@ export default function DetailItem() {
     };
   }, [listItem]);
 
-  useEffect(() => () => () => {
-      clearTimeout(timeOut);
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Chi tiết sản phẩm',
+      headerTitleStyle: {
+        alignItems: 'center',
+        color: '#fff',
+        justifyContent: 'center',
+        width: '100%',
+      },
     })
+  }, [])
   
 
   return (
@@ -78,7 +90,7 @@ export default function DetailItem() {
         resizeMode="cover"
       >
         <View>
-          {updateItem(listItem).map(item => (
+          {items.map(item => (
             <RenderItem
               key={item.color}
               color={item.color}
@@ -100,7 +112,7 @@ export default function DetailItem() {
           <View
             style={{
               minHeight: 40,
-              maxHeight: 200,
+              maxHeight: (Dimensions.get('window').height*25)/100,
               borderColor: '#ecf0f1',
               borderWidth: 2,
               paddingHorizontal: 8,
@@ -139,8 +151,7 @@ export default function DetailItem() {
             </ScrollView>
           </View>
           <View style={{flexDirection: 'row', marginVertical: 16, justifyContent: 'space-between'}}>
-            <Button style={{minWidth: 100, marginHorizontal: 8}} caption="Start" />
-            <Button style={{minWidth: 100, marginHorizontal: 8}} caption="Stop" bgColor="#ff4757" />
+            <Button style={{minWidth: 100, marginHorizontal: 8}} caption="Stop" bgColor="#ff4757" onPress={handleStop} />
           </View>
         </View>
       </ImageBackground>
@@ -203,14 +214,14 @@ const styles = StyleSheet.create({
   },
   designItem: {
     borderRadius: 100,
-    width: 70,
-    height: 70,
+    width: 45,
+    height: 45,
     borderWidth: 2,
     borderColor: '#eee',
   },
   containerItem: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     marginVertical: 8,
   },
@@ -218,3 +229,5 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
 });
+
+export default LoadingModal()(DetailItem)

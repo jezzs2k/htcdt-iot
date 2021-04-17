@@ -27,24 +27,28 @@ export default function HomeScreen() {
           </Text>
         </View>
         <View style={styles.section}>
-          <Text color="#19e7f7" size={15}>
-            Kết nôi ra toàn cầu 
-          </Text>
+          {/* <Text color="#ff4757" size={15}>
+            Kết nối ra toàn cầu 
+          </Text> */}
           <Text size={30} bold white style={styles.title}>
             Dự án sản phẩm 
           </Text>
           <Button
             style={[styles.demoButton, { flex: 1 }]}
             bordered
+            styleContent={{
+              paddingVertical: 20
+            }}
             caption="Bắt đầu vào hệ thống"
             onPress={() => navigation.navigate('Grids')}
           />
         </View>
         <View style={[styles.section, styles.sectionLarge]}>
           <Text color="#19e7f7" hCenter size={15} style={styles.description}>
-            Dự án phục vụ thức tế  và là bài tập cuối kỳ cho môn <Text>
-              Hệ thống cơ điện tử 
-                                                                 </Text> 
+            Dự án phục vụ thức tế  và là bài tập cuối kỳ cho môn 
+            <Text>
+              {' '} Hệ thống cơ điện tử
+            </Text> 
           </Text>
           <View style={styles.priceContainer}>
             <View style={{ flexDirection: 'row' }}>
@@ -52,7 +56,7 @@ export default function HomeScreen() {
             </View>
             <TouchableOpacity
               style={styles.priceLink}
-              onPress={() => console.log('Thanh vien trong nhom')
+              onPress={() => navigation.navigate('Components')
               }
             >
               <Text white size={14}>

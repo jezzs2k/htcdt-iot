@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TouchableOpacity,
   View,
@@ -9,15 +9,45 @@ import {
   Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import io from "socket.io-client";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { colors, fonts } from '../../styles';
 import { Button } from '../../components';
-import socket from './socket';
+import {LoadingModal} from '../loadingModal';
 
+export const socket = io('https://e289f2cbdcf6.ngrok.io',{
+  path: '/client'
+});
 
-
-const ItemDevice = () => {
+const ItemDevice = ({setStatusModal}) => {
   const navigation = useNavigation();
+  const [isConnect, setConnect] = useState(false);
+
+  const handleConnect = () => {
+    setStatusModal(true);
+    socket.disconnect();
+    socket.connect();
+  }
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log(socket.id);
+      setStatusModal(false);
+      setConnect(true);
+    });
+
+    socket.on("disconnect", () => {
+      setConnect(false);
+    });
+
+    socket.on("connect-item", (val) => {
+      console.log(val);
+      setConnect(true);
+    });
+
+    return () => socket.disconnect();
+  }, [])
 
   return (
     <TouchableOpacity key="item.id" style={styles.itemTwoContainer} disabled>
@@ -31,14 +61,19 @@ const ItemDevice = () => {
           }}
         />
         <View style={styles.itemTwoOverlay} />
-        <Text style={styles.itemTwoTitle}>Ten may: He thong 1</Text>
-        <Text style={styles.itemTwoSubTitle}>May hoat dong bao nhieu phut</Text>
-        <Text style={styles.itemTwoPrice}>May Hoat dong</Text>
+        <Text style={styles.itemTwoTitle}>ESP8266</Text>
+        {/* <Text style={styles.itemTwoSubTitle}>May hoat dong bao nhieu phut</Text> */}
+        <Text style={[styles.itemTwoPrice, {color: isConnect ? '#2ed573' : '#fff'}]}>{isConnect ? 'Máy đang hoạt động' : 'Máy đang không hoạt động'}</Text>
+        <TouchableOpacity disabled={isConnect} onPress={handleConnect} style={{flexDirection: 'row', alignItems: 'center'}}>
+          <MaterialIcons name="cast-connected" size={30} color={isConnect ? '#2ed573' : '#fff'} />
+          <Text style={[styles.itemTwoPrice, {fontSize: 16, marginHorizontal: 8}]}>{isConnect ? '' : 'Kết nối lại'}</Text>
+        </TouchableOpacity>
         <View style={styles.containerBtn}>
           <Button
+            disabled={!isConnect}
             style={[styles.btn]}
             caption="Theo dõi"
-            bgColor="green"
+            bgColor="#2980b9"
             onPress={() => navigation.navigate('DetailItem')}
           />
         </View>
@@ -99,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ItemDevice;
+export default LoadingModal()(ItemDevice);

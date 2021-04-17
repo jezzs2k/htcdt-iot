@@ -32,7 +32,7 @@ const tabNavigationData = [
     name: 'Components',
     component: ComponentsScreen,
     icon: iconComponents,
-    tabName: 'Cài đặt'
+    tabName: 'Thành viên'
   },
 ];
 
