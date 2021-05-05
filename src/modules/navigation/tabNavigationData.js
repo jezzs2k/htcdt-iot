@@ -17,12 +17,6 @@ const tabNavigationData = [
     tabName: 'Trang chủ'
   },
   {
-    name: 'Calendar',
-    component: CalendarScreen,
-    icon: iconCalendar,
-    tabName: 'Lịch làm việc'
-  },
-  {
     name: 'Grids',
     component: GridsScreen,
     icon: iconGrids,

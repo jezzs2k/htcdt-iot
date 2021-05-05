@@ -21,11 +21,6 @@ const drawerData = [
     screen: 'Home'
   },
   {
-    name: 'Lịch làm việc',
-    icon: iconCalendar,
-    screen: 'Calendar',
-  },
-  {
     name: 'Theo dõi hệ thống',
     icon: iconGrids,
     screen: 'Grids',

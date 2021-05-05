@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   Platform,
+  Alert
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import io from "socket.io-client";
@@ -16,9 +17,7 @@ import { colors, fonts } from '../../styles';
 import { Button } from '../../components';
 import {LoadingModal} from '../loadingModal';
 
-export const socket = io('https://e289f2cbdcf6.ngrok.io',{
-  path: '/client'
-});
+export const socket = io('http://invoice-maker.tech:3000');
 
 const ItemDevice = ({setStatusModal}) => {
   const navigation = useNavigation();
@@ -28,6 +27,14 @@ const ItemDevice = ({setStatusModal}) => {
     setStatusModal(true);
     socket.disconnect();
     socket.connect();
+
+    setTimeout(() => {
+      if (socket.connected) {
+        return;
+      }
+      setStatusModal(false);
+      Alert.alert('Kết nối thất bại', 'Kiểm tra lại kết nối wifi của ESP8266 !')
+    }, 4000);
   }
 
   useEffect(() => {

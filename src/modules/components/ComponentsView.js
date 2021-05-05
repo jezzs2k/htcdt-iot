@@ -20,17 +20,18 @@ export default function ComponentsScreen(props) {
         alignItems:'center',
         justifyContent: 'center',
       }}
+      keyExtractor={({name}) => name}
       data={arr}
       numColumns={2}
       renderItem={({item}) =>  (
         <View style={{
-          marginHorizontal: 2, 
+          marginHorizontal: 8, 
           marginVertical: 2,
           alignItems: 'center',
           paddingVertical: 8
         }}
         >
-          <Image source={{uri: item.image}} height={100} width={100} style={{flex: 1, width: 160, height: 150}} />
+          <Image source={{uri: item.image}} height={120} width={120} style={{flex: 1, width: 180, height: 190}} />
           <Text style={{
             fontWeight: '700',
             fontSize: 16,
