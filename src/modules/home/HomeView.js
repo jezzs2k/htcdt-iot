@@ -17,7 +17,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('../../../assets/images/background.png')}
+        source={require('../../../assets/images/AdobeStock_189224831.jpeg')}
         style={styles.bgImage}
         resizeMode="cover"
       >
@@ -44,7 +44,7 @@ export default function HomeScreen() {
           />
         </View>
         <View style={[styles.section, styles.sectionLarge]}>
-          <Text color="#19e7f7" hCenter size={15} style={styles.description}>
+          <Text color="#ffffff" hCenter size={15} style={styles.description}>
             Dự án phục vụ thức tế  và là bài tập cuối kỳ cho môn 
             <Text>
               {' '} Hệ thống cơ điện tử
@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   demoButton: {
-    marginTop: 8,
-    marginBottom: 8,
+    marginTop: 18,
+    marginBottom: 18,
     color: '#fff',
     borderColor: '#fff',
   },

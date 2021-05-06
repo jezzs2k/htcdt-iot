@@ -17,7 +17,7 @@ import { colors, fonts } from '../../styles';
 import { Button } from '../../components';
 import {LoadingModal} from '../loadingModal';
 
-export const socket = io('http://invoice-maker.tech:3000');
+export const socket = io('ws://34.72.238.39:3000');
 
 const ItemDevice = ({setStatusModal}) => {
   const navigation = useNavigation();
@@ -70,10 +70,10 @@ const ItemDevice = ({setStatusModal}) => {
         <View style={styles.itemTwoOverlay} />
         <Text style={styles.itemTwoTitle}>ESP8266</Text>
         {/* <Text style={styles.itemTwoSubTitle}>May hoat dong bao nhieu phut</Text> */}
-        <Text style={[styles.itemTwoPrice, {color: isConnect ? '#2ed573' : '#fff'}]}>{isConnect ? 'Máy đang hoạt động' : 'Máy đang không hoạt động'}</Text>
+        <Text style={[styles.itemTwoPrice, {color: isConnect ? '#2ed573' : '#fff'}]}>{isConnect ? 'Kết nối thành công' : 'Mất kết nối'}</Text>
         <TouchableOpacity disabled={isConnect} onPress={handleConnect} style={{flexDirection: 'row', alignItems: 'center'}}>
           <MaterialIcons name="cast-connected" size={30} color={isConnect ? '#2ed573' : '#fff'} />
-          <Text style={[styles.itemTwoPrice, {fontSize: 16, marginHorizontal: 8}]}>{isConnect ? '' : 'Kết nối lại'}</Text>
+          <Text style={[styles.itemTwoPrice, {fontSize: 16, marginHorizontal: 8}]}>{isConnect ? '' : 'Kết nối'}</Text>
         </TouchableOpacity>
         <View style={styles.containerBtn}>
           <Button

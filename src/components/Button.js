@@ -92,7 +92,7 @@ export default function RNSButton(props) {
       <LinearGradient
         start={{ x: 0.5, y: 1 }}
         end={{ x: 1, y: 1 }}
-        colors={gradientArray}
+        colors={!props.disabled ? gradientArray : ['#eeeeee', '#eeeeee']}
         style={[
           styles.button,
           props.small && styles.buttonSmall,
@@ -111,6 +111,9 @@ export default function RNSButton(props) {
               icon && styles.captionWithIcon,
               styles.primaryCaption,
               props.textGrStyle,
+              props.disabled && {
+                color: "#000000"
+              }
             ]}
           >
             {caption}

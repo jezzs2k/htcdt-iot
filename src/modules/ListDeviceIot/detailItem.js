@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, ImageBackground, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, ImageBackground, ScrollView, Dimensions, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { fonts, colors } from '../../styles';
@@ -28,6 +28,7 @@ const RenderItem = ({ color, total }) => (
 function DetailItem({setStatusModal}) {
   const navigation = useNavigation();
 
+  const [isStart, setIsStart] = useState(false);
   const [listItem, setListItem] = useState([]);
   const [items, setItems] = useState([
     { color: '#e74c3c', total: 0 , type: 'red'},
@@ -47,6 +48,18 @@ function DetailItem({setStatusModal}) {
       setStatusModal(false);
     }, 2000)
   };
+
+  const handleStart = () => {
+    setStatusModal(true);
+    socket.emit('start-device', {
+      isStart: true,
+    });
+
+    socket.on('start-success', () => {
+      setStatusModal(false);
+      setIsStart(true);
+    })
+  }
 
   const updateItem = (_listItem, val) => _listItem.map((item) => {
       if (item.type === val.type) {
@@ -85,7 +98,7 @@ function DetailItem({setStatusModal}) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('../../../assets/images/background.png')}
+        source={require('../../../assets/images/AdobeStock_189224831.jpeg')}
         style={styles.bgImage}
         resizeMode="cover"
       >
@@ -151,7 +164,8 @@ function DetailItem({setStatusModal}) {
             </ScrollView>
           </View>
           <View style={{flexDirection: 'row', marginVertical: 16, justifyContent: 'space-between'}}>
-            <Button style={{minWidth: 100, marginHorizontal: 8}} caption="Stop" bgColor="#ff4757" onPress={handleStop} />
+            <Button style={{minWidth: 100, marginHorizontal: 8}} disabled={isStart} caption="Bắt đầu" bgColor="#27ae60" onPress={handleStart} />
+            <Button style={{minWidth: 100, marginHorizontal: 8}} caption="Dừng" bgColor="#ff4757" onPress={handleStop} />
           </View>
         </View>
       </ImageBackground>
